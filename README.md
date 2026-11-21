@@ -1,36 +1,37 @@
-ChatServer: Fault-Tolerant Real-Time Chat in Elixir & Phoenix
+# ChatServer: Fault-Tolerant Real-Time Chat in Elixir & Phoenix
 =============================================================
 
 **ChatServer** is a concurrent, fault-tolerant real-time chat backend built with **Elixir**,  **OTP**, and **Phoenix Channels**. Created as a hands-on mastery project, it demonstrates how to design isolated, self-healing backend processes and connect them to live WebSocket clients without race conditions or shared-memory headaches.
 
 Whether you are a beginner learning how OTP processes work together or a developer looking to see how Phoenix Channels bridge backend state to real-time clients, this README breaks down the architecture, code examples, real-world use cases, and testing workflows in plain terms.
 
-Table of Contents
+## Table of Contents
 -----------------
 
-1.  [What This Project Does](https://www.google.com/search?q=%23what-this-project-does)
+1.  [What This Project Does](#what-this-project-does
+)
 
-2.  [How the System Fits Together](https://www.google.com/search?q=%23how-the-system-fits-together)
+2.  [How the System Fits Together](#how-the-system-fits-together)
 
-3.  [Core Concepts, Code Examples & Real-World Uses](https://www.google.com/search?q=%23core-concepts-code-examples--real-world-uses)
+3.  [Core Concepts, Code Examples & Real-World Uses](#core-concepts-code-examples--real-world-uses)
 
-    -   [GenServer: Isolated State & Concurrency](https://www.google.com/search?q=%231-genserver-isolated-state--concurrency)
+    -   [GenServer: Isolated State & Concurrency](#1-genserver-isolated-state--concurrency)
 
-    -   [DynamicSupervisor: On-Demand Process Lifecycles](https://www.google.com/search?q=%232-dynamicsupervisor-on-demand-process-lifecycles)
+    -   [DynamicSupervisor: On-Demand Process Lifecycles](#2-dynamicsupervisor-on-demand-process-lifecycles)
 
-    -   [Registry: Friendly Names to Process IDs](https://www.google.com/search?q=%233-registry-friendly-names-to-process-ids)
+    -   [Registry: Friendly Names to Process IDs](#3-registry-friendly-names-to-process-ids)
 
-    -   [Phoenix Channels & PubSub: Live WebSockets & Event Fan-Out](https://www.google.com/search?q=%234-phoenix-channels--pubsub-live-websockets--event-fan-out)
+    -   [Phoenix Channels & PubSub: Live WebSockets & Event Fan-Out](#4-phoenix-channels--pubsub-live-websockets--event-fan-out)
 
-4.  [Project Structure](https://www.google.com/search?q=%23project-structure)
+4.  [Project Structure](#project-structure)
 
-5.  [Hands-On Examples & Usage](https://www.google.com/search?q=%23hands-on-examples--usage)
+5.  [Hands-On Examples & Usage](#hands-on-examples--usage)
 
-6.  [Testing Strategy (Unit & Channel Integration Tests)](https://www.google.com/search?q=%23testing-strategy-unit--channel-integration-tests)
+6.  [Testing Strategy (Unit & Channel Integration Tests)](#testing-strategy-unit--channel-integration-tests)
 
-7.  [Key Lessons & Practical Tips](https://www.google.com/search?q=%23key-lessons--practical-tips)
+7.  [Key Lessons & Practical Tips](#key-lessons--practical-tips)
 
-What This Project Does
+# What This Project Does
 ----------------------
 
 In simple terms,  **ChatServer** powers chat rooms where users can:
@@ -43,7 +44,8 @@ In simple terms,  **ChatServer** powers chat rooms where users can:
 
 -   **Clean up automatically on disconnect:** When a client drops a connection,  `RoomChannel.terminate/2` triggers `ChatRoom.leave/2`, removing that socket from the room roster and notifying remaining members.
 
-How the System Fits Together
+## How the System Fits Together
+
 ----------------------------
 
 Instead of storing all chat rooms inside one giant dictionary or database table in memory, ChatServer gives **each room its own lightweight Elixir process**:
@@ -79,7 +81,7 @@ When a user joins `"room:lobby"`:
 
 5.  `RoomChannel` subscribes to `"room:lobby"` on `ChatServer.PubSub`, forwards PubSub events to the WebSocket client via `handle_info/2`, and cleans up the user when the socket terminates.
 
-Core Concepts, Code Examples & Real-World Uses
+## Core Concepts, Code Examples & Real-World Uses
 ----------------------------------------------
 
 ### 1\. GenServer: Isolated State & Concurrency
